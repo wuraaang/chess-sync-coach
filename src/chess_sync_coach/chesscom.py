@@ -9,7 +9,8 @@ class ChessComClient:
 
     def completed_games(self, username: str) -> list[ChessGame]:
         root = f"https://api.chess.com/pub/player/{username.lower()}"
-        archives = self._transport.get_json(f"{root}/games/archives")
+        archive_response = self._transport.get_json(f"{root}/games/archives")
+        archives = archive_response.get("archives", [])
         games: list[ChessGame] = []
 
         for archive in archives[-2:]:

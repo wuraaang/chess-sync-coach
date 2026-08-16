@@ -7,7 +7,12 @@ from chess_sync_coach.models import ChessGame
 class FakeTransport:
     def get_json(self, url: str):
         if url.endswith("/games/archives"):
-            return ["https://example.test/2026/07", "https://example.test/2026/08"]
+            return {
+                "archives": [
+                    "https://example.test/2026/07",
+                    "https://example.test/2026/08",
+                ]
+            }
         if url.endswith("/2026/07"):
             return {"games": [{"uuid": "old", "pgn": "1. d4", "end_time": 1}]}
         return {
