@@ -7,7 +7,7 @@ from pathlib import Path
 
 project_path = Path(__file__).parent
 venv_python = project_path / ".venv" / "bin" / "python"
-if venv_python.is_file() and Path(sys.executable).resolve() != venv_python.resolve():
+if venv_python.is_file() and Path(sys.executable) != venv_python:
     os.execv(str(venv_python), [str(venv_python), *sys.argv])
 
 sys.path.insert(0, str(project_path / "src"))
