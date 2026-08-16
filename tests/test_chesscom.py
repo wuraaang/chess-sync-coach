@@ -34,3 +34,10 @@ class ChessComClientTests(unittest.TestCase):
                 ChessGame(uuid="complete", pgn="1. e4", end_time=2),
             ],
         )
+
+    def test_returns_only_the_latest_completed_games_when_limited(self) -> None:
+        client = ChessComClient(FakeTransport())
+
+        games = client.recent_completed_games("AdaChess", 1)
+
+        self.assertEqual([game.uuid for game in games], ["complete"])
