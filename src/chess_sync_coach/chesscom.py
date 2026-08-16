@@ -23,3 +23,8 @@ class ChessComClient:
                     games.append(ChessGame(uuid=uuid, pgn=pgn, end_time=end_time))
 
         return sorted(games, key=lambda game: game.end_time)
+
+    def recent_completed_games(self, username: str, limit: int) -> list[ChessGame]:
+        if limit <= 0:
+            raise ValueError("limit must be positive")
+        return self.completed_games(username)[-limit:]

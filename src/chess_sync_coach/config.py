@@ -13,6 +13,7 @@ class Settings:
     lichess_token: str
     state_path: Path
     poll_seconds: int
+    stockfish_path: Optional[Path]
 
 
 def _read_env_file(path: Path) -> dict[str, str]:
@@ -33,7 +34,8 @@ def load_settings(
     environ: Mapping[str, str], env_path: Optional[Path] = None
 ) -> Settings:
     """Validate and return the settings required for one sync cycle."""
-    values = _read_env_file(env_path or Path.cwd() / ".env")
+    project_path = Path.cwd()
+    values = _read_env_file(env_path or project_path / ".env")
     values.update(environ)
     username = values.get("CHESSCOM_USERNAME", "").strip()
     token = values.get("LICHESS_TOKEN", "").strip()
@@ -53,11 +55,18 @@ def load_settings(
     if poll_seconds <= 0:
         raise ValueError("CHESS_SYNC_POLL_SECONDS must be positive")
 
+    bundled_stockfish = (
+        project_path / ".tools" / "stockfish" / "stockfish" / "stockfish-macos-m1-apple-silicon"
+    )
+    stockfish_value = values.get("STOCKFISH_PATH", "").strip()
     return Settings(
         chesscom_username=username,
         lichess_token=token,
         state_path=state_path,
         poll_seconds=poll_seconds,
+        stockfish_path=Path(stockfish_value) if stockfish_value else (
+            bundled_stockfish if bundled_stockfish.is_file() else None
+        ),
     )
 
 
