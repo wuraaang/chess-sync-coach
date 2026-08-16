@@ -31,7 +31,7 @@ class InMemoryState:
 
 
 class FailingDestination:
-    def import_private(self, pgn):
+    def import_game(self, game):
         raise RuntimeError("network unavailable")
 
 

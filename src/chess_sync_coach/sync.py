@@ -1,6 +1,7 @@
 """Synchronize new completed games one time."""
 
 from dataclasses import dataclass
+from datetime import UTC, datetime
 
 
 @dataclass(frozen=True)
@@ -22,6 +23,23 @@ class ChessComSource:
         return self._client.completed_games(self._username)
 
 
+class StudyDestination:
+    """Places games in a private Lichess study grouped by calendar month."""
+
+    def __init__(self, client, state) -> None:
+        self._client = client
+        self._state = state
+
+    def import_game(self, game) -> None:
+        month = datetime.fromtimestamp(game.end_time, UTC).strftime("%Y-%m")
+        study_id = self._state.study_id(month)
+        if not study_id:
+            study_id = self._client.create_private_study(f"Chess Sync Coach {month}")
+            self._state.set_study_id(month, study_id)
+            self._state.save()
+        self._client.import_into_study(study_id, game.pgn)
+
+
 def run_sync(source, destination, state) -> SyncSummary:
     """Import each not-yet-processed game, without losing failed games."""
     games = source.completed_games()
@@ -34,7 +52,7 @@ def run_sync(source, destination, state) -> SyncSummary:
             skipped += 1
             continue
         try:
-            destination.import_private(game.pgn)
+            destination.import_game(game)
         except RuntimeError as error:
             failures.append(f"{game.uuid}: {error}")
             continue

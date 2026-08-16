@@ -13,15 +13,16 @@ from chess_sync_coach.http import UrlLibTransport
 from chess_sync_coach.lichess import LichessClient
 from chess_sync_coach.launch_agent import install_launch_agent
 from chess_sync_coach.state import ProcessedState
-from chess_sync_coach.sync import ChessComSource, run_sync
+from chess_sync_coach.sync import ChessComSource, StudyDestination, run_sync
 
 
 def _sync_once() -> int:
     settings = load_settings(os.environ)
     transport = UrlLibTransport()
     source = ChessComSource(ChessComClient(transport), settings.chesscom_username)
-    destination = LichessClient(transport, settings.lichess_token)
-    summary = run_sync(source, destination, ProcessedState.load(settings.state_path))
+    state = ProcessedState.load(settings.state_path)
+    destination = StudyDestination(LichessClient(transport, settings.lichess_token), state)
+    summary = run_sync(source, destination, state)
 
     print(
         f"Found {summary.found}; imported {summary.imported}; skipped {summary.skipped}."

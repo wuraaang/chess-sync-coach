@@ -14,3 +14,14 @@ class ProcessedStateTests(unittest.TestCase):
             state.save()
 
             self.assertTrue(ProcessedState.load(path).contains("game-a"))
+
+    def test_study_identifier_survives_a_reload(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "state.json"
+            state = ProcessedState.load(path)
+            state.set_study_id("2026-08", "study-a")
+            state.save()
+
+            self.assertEqual(
+                ProcessedState.load(path).study_id("2026-08"), "study-a"
+            )

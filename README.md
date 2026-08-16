@@ -1,6 +1,6 @@
 # Chess Sync Coach
 
-Local tool for importing completed Chess.com games into Lichess for later study.
+Local tool for importing completed Chess.com games into private Lichess studies for later study.
 
 The first version is intentionally limited to completed games. It never gives move suggestions during a Chess.com game.
 
@@ -12,7 +12,7 @@ Install the project with Python 3.12 or later:
 python3 -m pip install -e .
 ```
 
-Set your public Chess.com username and create a Lichess personal access token that can import games. Keep the token only in your local shell configuration or password manager; do not put it in Git.
+Set your public Chess.com username and create a Lichess personal access token with **Study write** permission. Keep the token only in your local shell configuration or password manager; do not put it in Git.
 
 ```bash
 export CHESSCOM_USERNAME="your-chess-com-name"
