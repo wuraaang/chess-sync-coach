@@ -25,3 +25,28 @@ class LichessClientTests(unittest.TestCase):
         self.assertEqual(transport.url, "https://lichess.org/api/study/study-id/import-pgn")
         self.assertEqual(transport.form, {"pgn": "1. e4"})
         self.assertEqual(transport.headers, {"Authorization": "Bearer test-token"})
+
+    def test_imports_an_oriented_interactive_lesson(self) -> None:
+        transport = RecordingTransport()
+
+        LichessClient(transport, "test-token").import_interactive_lesson(
+            "study-id", "Menace de dame", "1. c3 *", "white"
+        )
+
+        self.assertEqual(
+            transport.form,
+            {
+                "pgn": "1. c3 *",
+                "name": "Menace de dame",
+                "orientation": "white",
+                "mode": "gamebook",
+            },
+        )
+
+    def test_training_study_disables_engine_and_explorer(self) -> None:
+        transport = RecordingTransport()
+
+        LichessClient(transport, "test-token").create_training_study("Programme")
+
+        self.assertEqual(transport.form["computer"], "nobody")
+        self.assertEqual(transport.form["explorer"], "nobody")
