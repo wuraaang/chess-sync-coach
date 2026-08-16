@@ -1,0 +1,5 @@
+.worktrees/
+.env
+.chess-sync-coach/
+__pycache__/
+*.py[cod]
