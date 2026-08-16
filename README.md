@@ -35,3 +35,26 @@ export CHESS_SYNC_POLL_SECONDS=600
 ```
 
 Use macOS `launchd` later if you want the watcher to start automatically when you sign in. The Mac must be awake for local synchronization to run.
+
+## Targeted training
+
+Run this when you want a fresh program of exercises:
+
+```bash
+./chess-sync-coach training
+```
+
+It analyzes the ten latest completed Chess.com games, including wins, and
+creates a small private Lichess program of interactive lessons. Each lesson
+uses your original colour, makes you play only that side, and disables the
+Lichess engine and opening explorer so no arrows reveal the answer. The
+existing ten-minute synchronizer does not run Stockfish.
+
+The first run downloads no software itself. Install a local Stockfish binary in
+`.tools/stockfish/stockfish/` or set `STOCKFISH_PATH` in the ignored `.env`
+file. The project uses a local `.venv` when it exists; install dependencies
+once with:
+
+```bash
+python3 -m venv .venv && .venv/bin/python -m pip install "python-chess>=1.999,<2"
+```
