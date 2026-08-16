@@ -3,13 +3,15 @@
 import argparse
 import getpass
 import os
-import time
 from pathlib import Path
+import sys
+import time
 
 from chess_sync_coach.chesscom import ChessComClient
 from chess_sync_coach.config import load_settings, save_lichess_token
 from chess_sync_coach.http import UrlLibTransport
 from chess_sync_coach.lichess import LichessClient
+from chess_sync_coach.launch_agent import install_launch_agent
 from chess_sync_coach.state import ProcessedState
 from chess_sync_coach.sync import ChessComSource, run_sync
 
@@ -37,6 +39,10 @@ def main(argv: list[str] | None = None) -> int:
     subcommands.add_parser("sync", help="Run one synchronization cycle.")
     subcommands.add_parser("watch", help="Repeat synchronization until stopped.")
     subcommands.add_parser("set-token", help="Save a Lichess token without echoing it.")
+    install_parser = subcommands.add_parser(
+        "install-launch-agent", help="Run a brief sync automatically on macOS."
+    )
+    install_parser.add_argument("--interval", type=int, default=600)
     arguments = parser.parse_args(argv)
 
     try:
@@ -44,6 +50,13 @@ def main(argv: list[str] | None = None) -> int:
             token = getpass.getpass("Paste Lichess token (hidden): ")
             save_lichess_token(token, Path.cwd() / ".env")
             print("Lichess token saved locally.")
+            return 0
+
+        if arguments.command == "install-launch-agent":
+            agent_path = install_launch_agent(
+                Path.cwd(), Path(sys.executable), arguments.interval
+            )
+            print(f"Automatic synchronizer installed at {agent_path}.")
             return 0
 
         if arguments.command == "sync":
