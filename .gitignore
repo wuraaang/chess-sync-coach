@@ -3,3 +3,4 @@
 .chess-sync-coach/
 __pycache__/
 *.py[cod]
+*.egg-info/
