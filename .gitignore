@@ -1,4 +1,6 @@
 .worktrees/
+.venv/
+.tools/
 .env
 .chess-sync-coach/
 __pycache__/

@@ -1,10 +1,16 @@
 #!/usr/bin/env python3
 """Run Chess Sync Coach directly from this project folder."""
 
+import os
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).parent / "src"))
+project_path = Path(__file__).parent
+venv_python = project_path / ".venv" / "bin" / "python"
+if venv_python.is_file() and Path(sys.executable).resolve() != venv_python.resolve():
+    os.execv(str(venv_python), [str(venv_python), *sys.argv])
+
+sys.path.insert(0, str(project_path / "src"))
 
 from chess_sync_coach.cli import main
 
