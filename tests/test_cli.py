@@ -13,8 +13,11 @@ class CliTests(unittest.TestCase):
     def test_sync_reports_missing_configuration_without_a_traceback(self) -> None:
         error_output = io.StringIO()
 
-        with patch.dict(os.environ, {}, clear=True), redirect_stderr(error_output):
-            exit_code = main(["sync"])
+        with tempfile.TemporaryDirectory() as directory:
+            with patch.dict(os.environ, {}, clear=True), patch(
+                "chess_sync_coach.config.Path.cwd", return_value=Path(directory)
+            ), redirect_stderr(error_output):
+                exit_code = main(["sync"])
 
         self.assertEqual(exit_code, 2)
         self.assertIn("CHESSCOM_USERNAME", error_output.getvalue())

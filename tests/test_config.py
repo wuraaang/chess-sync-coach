@@ -7,15 +7,18 @@ from chess_sync_coach.config import load_settings, save_lichess_token
 
 class SettingsTests(unittest.TestCase):
     def test_defaults_and_required_secret(self) -> None:
-        settings = load_settings(
-            {"CHESSCOM_USERNAME": "AdaChess", "LICHESS_TOKEN": "secret"}
-        )
+        with tempfile.TemporaryDirectory() as directory:
+            missing_env_path = Path(directory) / ".env"
+            settings = load_settings(
+                {"CHESSCOM_USERNAME": "AdaChess", "LICHESS_TOKEN": "secret"},
+                env_path=missing_env_path,
+            )
 
-        self.assertEqual(settings.chesscom_username, "AdaChess")
-        self.assertEqual(settings.poll_seconds, 300)
+            self.assertEqual(settings.chesscom_username, "AdaChess")
+            self.assertEqual(settings.poll_seconds, 300)
 
-        with self.assertRaisesRegex(ValueError, "LICHESS_TOKEN"):
-            load_settings({"CHESSCOM_USERNAME": "AdaChess"})
+            with self.assertRaisesRegex(ValueError, "LICHESS_TOKEN"):
+                load_settings({"CHESSCOM_USERNAME": "AdaChess"}, env_path=missing_env_path)
 
     def test_loads_values_from_local_env_file(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
