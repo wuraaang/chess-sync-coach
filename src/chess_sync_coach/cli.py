@@ -6,6 +6,7 @@ import os
 from pathlib import Path
 import sys
 import time
+from typing import List, Optional
 
 from chess_sync_coach.chesscom import ChessComClient
 from chess_sync_coach.config import load_settings, save_lichess_token
@@ -32,7 +33,7 @@ def _sync_once() -> int:
     return 1 if summary.failures else 0
 
 
-def main(argv: list[str] | None = None) -> int:
+def main(argv: Optional[List[str]] = None) -> int:
     parser = argparse.ArgumentParser(
         description="Synchronize completed Chess.com games to private Lichess imports."
     )

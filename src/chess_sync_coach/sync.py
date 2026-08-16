@@ -1,7 +1,7 @@
 """Synchronize new completed games one time."""
 
 from dataclasses import dataclass
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 
 
 @dataclass(frozen=True)
@@ -31,7 +31,7 @@ class StudyDestination:
         self._state = state
 
     def import_game(self, game) -> None:
-        month = datetime.fromtimestamp(game.end_time, UTC).strftime("%Y-%m")
+        month = datetime.fromtimestamp(game.end_time, timezone.utc).strftime("%Y-%m")
         study_id = self._state.study_id(month)
         if not study_id:
             study_id = self._client.create_private_study(f"Chess Sync Coach {month}")

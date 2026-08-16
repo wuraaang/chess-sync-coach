@@ -6,23 +6,18 @@ The first version is intentionally limited to completed games. It never gives mo
 
 ## Setup
 
-Install the project with Python 3.12 or later:
-
-```bash
-python3 -m pip install -e .
-```
-
 Set your public Chess.com username and create a Lichess personal access token with **Study write** permission. Keep the token only in your local shell configuration or password manager; do not put it in Git.
 
+Use the local command to paste your token without displaying it in the terminal:
+
 ```bash
-export CHESSCOM_USERNAME="your-chess-com-name"
-export LICHESS_TOKEN="your-lichess-token"
+./chess-sync-coach set-token
 ```
 
 ## Run once
 
 ```bash
-chess-sync-coach sync
+./chess-sync-coach sync
 ```
 
 The command imports completed games not already recorded in the local state file. A second run skips the same games.
@@ -30,7 +25,7 @@ The command imports completed games not already recorded in the local state file
 ## Watch for new games
 
 ```bash
-chess-sync-coach watch
+./chess-sync-coach watch
 ```
 
 It checks every five minutes by default. Change this only when needed:

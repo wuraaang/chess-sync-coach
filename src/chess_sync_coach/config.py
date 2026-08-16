@@ -4,6 +4,7 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 import os
 from pathlib import Path
+from typing import Optional
 
 
 @dataclass(frozen=True)
@@ -29,7 +30,7 @@ def _read_env_file(path: Path) -> dict[str, str]:
 
 
 def load_settings(
-    environ: Mapping[str, str], env_path: Path | None = None
+    environ: Mapping[str, str], env_path: Optional[Path] = None
 ) -> Settings:
     """Validate and return the settings required for one sync cycle."""
     values = _read_env_file(env_path or Path.cwd() / ".env")

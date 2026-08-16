@@ -4,6 +4,8 @@ import tempfile
 import unittest
 from contextlib import redirect_stderr
 from pathlib import Path
+import subprocess
+import sys
 from unittest.mock import patch
 
 from chess_sync_coach.cli import main
@@ -32,3 +34,14 @@ class CliTests(unittest.TestCase):
 
             self.assertEqual(exit_code, 0)
             self.assertIn("LICHESS_TOKEN=secret", env_path.read_text())
+
+    def test_project_command_shows_help(self) -> None:
+        result = subprocess.run(
+            ["./chess-sync-coach", "--help"],
+            capture_output=True,
+            check=False,
+            text=True,
+        )
+
+        self.assertEqual(result.returncode, 0)
+        self.assertIn("set-token", result.stdout)

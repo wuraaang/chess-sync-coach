@@ -2,6 +2,7 @@
 
 import json
 from pathlib import Path
+from typing import Optional
 
 
 class ProcessedState:
@@ -27,7 +28,7 @@ class ProcessedState:
     def mark(self, game_uuid: str) -> None:
         self._game_uuids.add(game_uuid)
 
-    def study_id(self, month: str) -> str | None:
+    def study_id(self, month: str) -> Optional[str]:
         return self._study_ids.get(month)
 
     def set_study_id(self, month: str, study_id: str) -> None:
